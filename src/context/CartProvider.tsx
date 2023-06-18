@@ -31,15 +31,39 @@ const reducer = (
 ): CartStateType => {
   switch (action.type) {
     case REDUCER_ACTION_TYPE.ADD: {
+      if (!action.payload) {
+        throw new Error('action.payload missing in ADD action');
+      }
+
+      const { sku, name, price } = action.payload;
+
+      const filteredCart: CartItemType[] = state.cart.filter(
+        (item) => item.sku !== sku
+      );
+
+      const itemExists: CartItemType | undefined = state.cart.find(
+        (item) => item.sku === sku
+      );
+
+      const qty: number = itemExists ? itemExists.qty + 1 : 1;
+
+      return { ...state, cart: [...filteredCart, { sku, name, price, qty }] };
     }
 
     case REDUCER_ACTION_TYPE.REMOVE: {
+      if (!action.payload) {
+        throw new Error('action.payload missing in REMOVE action');
+      }
     }
 
     case REDUCER_ACTION_TYPE.QUANTITY: {
+      if (!action.payload) {
+        throw new Error('action.payload missing in QUANTITY action');
+      }
     }
 
     case REDUCER_ACTION_TYPE.SUBMIT: {
+      return { ...state, cart: [] };
     }
     default:
       throw new Error('Unidentified reducer action type');
