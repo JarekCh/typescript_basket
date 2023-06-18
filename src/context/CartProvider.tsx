@@ -1,4 +1,4 @@
-import { type } from 'os';
+import { useReducer } from 'react';
 
 export type CartItemType = {
   sku: string;
@@ -93,4 +93,25 @@ const reducer = (
     default:
       throw new Error('Unidentified reducer action type');
   }
+};
+
+const useCartContex = (initCartState: CartStateType) => {
+  const [state, dispatch] = useReducer(reducer, initCartState);
+
+  const REDUCER_ACTIONS = useMemo(() => {
+    return REDUCER_ACTION_TYPE;
+  }, []);
+
+  const totalItems: number = state.cart.reduce((previousValue, cartItem) => {
+    return previousValue + cartItem.qty;
+  }, 0);
+
+  const totalPrice: number = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  }).format(
+    state.cart.reduce((previousValue, cartItem) => {
+      return previousValue + cartItem.qty * cartItem.price;
+    }, 0)
+  );
 };
