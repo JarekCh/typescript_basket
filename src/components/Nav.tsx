@@ -11,6 +11,7 @@ const Nav = ({ viewCart, setViewCart }: PropsType) => {
   );
 
   const content = <nav className='nav'>{button}</nav>;
+
   return content;
 };
 
